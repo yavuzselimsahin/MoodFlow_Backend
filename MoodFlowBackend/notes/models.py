@@ -15,7 +15,6 @@ MOOD_CHOICES = [
     ('other', 'Other'),
     ]
 class Note(models.Model):
-    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     body = models.TextField(null=True, blank=True)
     title = models.CharField(max_length=40, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)

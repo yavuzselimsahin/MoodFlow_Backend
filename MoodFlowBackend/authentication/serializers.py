@@ -54,12 +54,8 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         user.save()
 
-        # token = RefreshToken.for_user(user)
-        
-        # token['username'] = user.username
-        # token['email'] = user.email
-
         return user
+        
           
         
         
