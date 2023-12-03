@@ -21,5 +21,7 @@ class Note(models.Model):
     updated = models.DateTimeField(auto_now=True)
     mood = models.CharField(max_length=20, choices=MOOD_CHOICES, default='neutral')
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True, related_name='notes')
+    body_html = models.TextField(null=True, blank=True,)
     def __str__(self):
         return self.title
+    
