@@ -5,14 +5,15 @@ from authentication.models import CustomUser
 # Create your models here.
 # Model for Notes
 MOOD_CHOICES = [
-    ('happy', 'Happy'),
-    ('sad', 'Sad'),
-    ('angry', 'Angry'),
-    ('anxious', 'Anxious'),
-    ('excited', 'Excited'),
-    ('tired', 'Tired'),
-    ('neutral', 'Neutral'),
-    ('other', 'Other'),
+    ('joy', 'Joy'),
+    ('anger', 'Anger'),
+    ('trust', 'Trust'),
+    ('fear', 'Fear'),
+    ('surprise', 'Surprise'),
+    ('sadness', 'Sadness'),
+    ('disgust', 'Disgust'),
+    ('anticipation', 'Anticipation'),
+    ('neutral', 'Neutral')
     ]
 class Note(models.Model):
     body = models.TextField(null=True, blank=True)

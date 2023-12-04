@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'notes',
     'corsheaders',
     'rest_framework_simplejwt.token_blacklist',
+    'django_filters',
 ]
 
 SIMPLE_JWT = {
