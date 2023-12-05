@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'dj_rest_auth',
     'dj_rest_auth.registration',
     'notes',
+    'time_tracking',
     'corsheaders',
     'rest_framework_simplejwt.token_blacklist',
     'django_filters',
