@@ -86,6 +86,18 @@ def getRoutes(request):
             'body': None,
             'description': 'Returns a single note object detail, updates a single note, or deletes a single note'
         },
+         {
+            'Endpoint': '/api/time_entries/',
+            'method': 'GET, POST',
+            'body': None,
+            'description': 'Returns an array of time entries or creates a time entry'
+        },
+        {
+            'Endpoint': '/api/time_entries/id',
+            'method': 'GET, PUT, DELETE',
+            'body': None,
+            'description': 'Returns a specific time entry, updates a time entry, or deletes a time entry'
+        },
     ]
     return Response(routes)
 

@@ -1,3 +1,4 @@
+from datetime import datetime
 from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import permission_classes
@@ -18,9 +19,8 @@ class TimeEntryListCreateView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         start_time = timezone.now()
-        end_time = serializer.validated_data['end_time']
-        duration = end_time - start_time
-        serializer.save(user=self.request.user, duration=duration, start_time=start_time)
+        user_specified_duration = serializer.validated_data.get('user_specified_duration', None)
+        serializer.save(user=self.request.user, start_time=start_time, user_specified_duration=user_specified_duration)
 
 @permission_classes([IsAuthenticated])
 class TimeEntryDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
@@ -30,11 +30,11 @@ class TimeEntryDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
         return TimeEntry.objects.filter(user=self.request.user)
 
     def update(self, request, *args, **kwargs):
-        response = super().update(request, *args, **kwargs)
         time_entry = self.get_object()
-        time_entry.duration = time_entry.end_time - time_entry.start_time
-        time_entry.save()
-        return response
+        serializer = self.get_serializer(data=request.data, instance=time_entry, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
