@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import permission_classes
@@ -7,6 +7,7 @@ from .serializers import TimeEntrySerializer
 from django.utils import timezone
 from rest_framework.decorators import action, api_view
 from rest_framework.response import Response
+from django.utils.dateparse import parse_duration
 
 
 
@@ -29,8 +30,22 @@ class TimeEntryDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         return TimeEntry.objects.filter(user=self.request.user)
 
+    # def update(self, request, *args, **kwargs):
+    #     time_entry = self.get_object()
+    #     serializer = self.get_serializer(data=request.data, instance=time_entry, partial=True)
+    #     serializer.is_valid(raise_exception=True)
+    #     serializer.save()
+    #     return Response(serializer.data)
+    
     def update(self, request, *args, **kwargs):
         time_entry = self.get_object()
+        new_duration = request.data.get('duration', None)
+        if new_duration is not None:
+            new_duration = timedelta(seconds=int(new_duration))
+            if time_entry.duration is not None:
+                request.data['duration'] = str(time_entry.duration + new_duration)
+            else:
+                request.data['duration'] = str(new_duration)
         serializer = self.get_serializer(data=request.data, instance=time_entry, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()

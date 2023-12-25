@@ -1,3 +1,4 @@
+from datetime import time,timezone, timedelta, datetime
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -7,6 +8,10 @@ from rest_framework.decorators import permission_classes
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
+from django.utils import timezone
+# import logging
+
+# logger = logging.getLogger(__name__)
 
 
 @permission_classes([IsAuthenticated])
@@ -26,6 +31,19 @@ class NoteListCreateView(generics.ListCreateAPIView):
         mood = self.request.query_params.get('mood', None)
         if mood is not None:
             queryset = queryset.filter(mood=mood)
+
+
+        date_str = self.request.query_params.get('date', None)
+        if date_str is not None:
+            target_date = datetime.strptime(date_str, "%Y-%m-%d")
+            target_date = timezone.make_aware(target_date, timezone=timezone.get_fixed_timezone(180))  # adjust for UTC+3
+
+            # Create a range from 21:00 of the target date to 21:00 of the next day
+            day_start = datetime.combine(target_date - timedelta(days=1), time(21, 0))
+            day_end = datetime.combine(target_date, time(21, 0))
+
+            queryset = queryset.filter(created__range=[day_start, day_end])
+
 
         # Order by 'updated' field
         order = self.request.query_params.get('order', 'asc')
@@ -49,6 +67,20 @@ class NoteDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
         mood = self.request.query_params.get('mood', None)
         if mood is not None:
             queryset = queryset.filter(mood=mood)
+
+
+        date_str = self.request.query_params.get('date', None)
+        if date_str is not None:
+            target_date = datetime.strptime(date_str, "%Y-%m-%d")
+            target_date = timezone.make_aware(target_date, timezone=timezone.get_fixed_timezone(180))  # adjust for UTC+3
+
+            # Create a range from 21:00 of the target date to 21:00 of the next day
+            day_start = datetime.combine(target_date - timedelta(days=1), time(21, 0))
+            day_end = datetime.combine(target_date, time(21, 0))
+
+            queryset = queryset.filter(created__range=[day_start, day_end])
+
+
 
         
         order = self.request.query_params.get('order', 'asc')
